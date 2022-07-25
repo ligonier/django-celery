@@ -233,7 +233,9 @@ class DatabaseScheduler(Scheduler):
         s = {}
         for name, entry in dict_.items():
             try:
-                s[name] = self.Entry.from_entry(name, **entry)
+                entry_instance = self.Entry.from_entry(name, **entry)
+                if entry_instance.model.enabled:
+                    s[name] = entry_instance
             except Exception as exc:
                 error(ADD_ENTRY_ERROR, name, exc, entry)
         self.schedule.update(s)
